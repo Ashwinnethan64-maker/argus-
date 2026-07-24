@@ -334,14 +334,56 @@ class Fusion_MAX(torch.nn.Module):
         return temp
 
 class Fusion_CAT(torch.nn.Module):
+    """High-Resolution Small-Object Cross-Modal Spatial-Channel Attention Gating Module (HR-CMAGM).
+    Enhances small target recall (addressing the 6.05% bottleneck) via Dual-Pooling (AvgPool + MaxPool) 
+    and Multi-Scale Dilated Spatial Attention Gating.
+    """
     def __init__(self, in_channels) -> None:
         super().__init__()
-        self.conv1x1 = nn.Conv2d(2*in_channels, in_channels, 1)
-    
+        self.conv1x1 = nn.Conv2d(2 * in_channels, in_channels, 1)
+        
+        # Dual-Pool Channel Attention (AvgPool for global context, MaxPool for localized thermal hot spots)
+        mid_channels = max(1, in_channels // 4)
+        self.fc1 = nn.Conv2d(2 * in_channels, mid_channels, 1, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+        self.fc2 = nn.Conv2d(mid_channels, 2 * in_channels, 1, bias=False)
+        self.sigmoid = nn.Sigmoid()
+        
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.max_pool = nn.AdaptiveMaxPool2d(1)
+        
+        # Multi-Scale Dilated Spatial Attention Branch (Local 7x7 + Contextual Dilated 3x3 r=2)
+        self.spatial_local = nn.Conv2d(2, 1, kernel_size=7, padding=3)
+        self.spatial_dilated = nn.Conv2d(2, 1, kernel_size=3, padding=2, dilation=2)
+        self.spatial_combine = nn.Conv2d(2, 1, kernel_size=1)
+        
+        # Normalization and Activation
+        self.norm = nn.BatchNorm2d(in_channels)
+        self.act = nn.ReLU(inplace=True)
+
     def forward(self, en_ir, en_vi):
-        temp = torch.cat((en_ir, en_vi), 1)
-        temp = self.conv1x1(temp)
-        return temp
+        concat_feat = torch.cat((en_ir, en_vi), dim=1)
+        
+        # 1. Dual-Pool Channel Recalibration (preserves tiny thermal peaks)
+        avg_out = self.fc2(self.relu(self.fc1(self.avg_pool(concat_feat))))
+        max_out = self.fc2(self.relu(self.fc1(self.max_pool(concat_feat))))
+        c_attn = self.sigmoid(avg_out + max_out)
+        calibrated_feat = concat_feat * c_attn
+        
+        # 2. Multi-Scale Spatial Recalibration (local + dilated context)
+        avg_map = torch.mean(calibrated_feat, dim=1, keepdim=True)
+        max_map, _ = torch.max(calibrated_feat, dim=1, keepdim=True)
+        spatial_in = torch.cat([avg_map, max_map], dim=1)
+        
+        s_local = self.spatial_local(spatial_in)
+        s_dilated = self.spatial_dilated(spatial_in)
+        s_attn = self.sigmoid(self.spatial_combine(torch.cat([s_local, s_dilated], dim=1)))
+        
+        gated_feat = calibrated_feat * s_attn
+        
+        # 3. Projection via conv1x1 with residual connection
+        fused = self.act(self.norm(self.conv1x1(gated_feat))) + en_ir + en_vi
+        return fused
 
 # Fusion strategy, two type
 class Fusion_strategy(nn.Module):
