@@ -1,0 +1,63 @@
+# Datasets
+VTUAV_subset/
+
+# Model Checkpoints & Weights
+checkpoints/
+*.pth
+*.pth*
+*.pt
+*.onnx
+*.engine
+*.bin
+*.weights
+
+# Visualizations & Generated Outputs
+stage1_visualizations/
+stage1_dataset_summary.json
+
+# Archives & Large Files
+repo.zip
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+
+# JUNK / Incomplete Clones
+baseline_qfdet/
+
+# Python Caches & Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+
+# Logs & Temporary Files
+*.log
+*.tmp
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
