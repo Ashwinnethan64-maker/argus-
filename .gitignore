@@ -1,8 +1,10 @@
 # Datasets
 VTUAV_subset/
+**/VTUAV_subset/
 
 # Model Checkpoints & Weights
 checkpoints/
+**/checkpoints/
 *.pth
 *.pth*
 *.pt
@@ -11,8 +13,15 @@ checkpoints/
 *.bin
 *.weights
 
+# Training Work Directories & Results
+work_dirs/
+**/work_dirs/
+
 # Visualizations & Generated Outputs
 stage1_visualizations/
+**/stage1_visualizations/
+visual_comparison_results/
+**/visual_comparison_results/
 stage1_dataset_summary.json
 
 # Archives & Large Files
@@ -25,6 +34,7 @@ repo.zip
 
 # JUNK / Incomplete Clones
 baseline_qfdet/
+**/baseline_qfdet/
 
 # Python Caches & Environments
 __pycache__/
