@@ -2,9 +2,22 @@
 <html lang="en" class="dark">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 <title>ARGUS | Multi-Modal RGB-Thermal Workstation</title>
 <meta name="description" content="Argus CMAGM Cross-Modal Attention Pedestrian Detection System — Yugma TechFest 2.0 MedhaDrishti Hackathon"/>
+<meta name="author" content="Argus AI Development Team"/>
+
+<!-- Open Graph & Social SEO -->
+<meta property="og:title" content="ARGUS | Multi-Modal RGB-Thermal Workstation"/>
+<meta property="og:description" content="Enterprise Cross-Modal Attention Pedestrian Detection Workstation supporting RGB-Thermal Drone Perception."/>
+<meta property="og:image" content="logo.png"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ARGUS AI Perception"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="ARGUS | Multi-Modal RGB-Thermal Workstation"/>
+<meta name="twitter:description" content="Enterprise Cross-Modal Attention Pedestrian Detection Workstation."/>
+<meta name="twitter:image" content="logo.png"/>
+<link rel="canonical" href="https://argus-ai.vtuav.org/"/>
 
 <!-- Favicons & Branding -->
 <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAMMElEQVR4nHVXCXAU55V+/9/X3IeG0S0UgRDWZSFERGIwkhAkLPF6vcESaxLCYUf2msSGdSp27CSaqXLIgRH4wmtcEDY2wZE2iwykjI0TIdZgHCMbdIHAIARGI5A0kubQzHT3//+pv4fTFb+qrunqfv/7Xr/je28QMIYAIQYAJu+29h8jd86/MapnAgAwxgAxhICodPLw2w9Edz3fBY2NGPx+Cv9EGhsbsd/vp0vn/rywNPfbf1EkMwJKGMeQBYkISBjSUHDvL99c+AoAJAAYEsEHCB5udE9ZtGqfOCNvHkQAaEIDwAgYZYBAAJaIgGC2mJIwPgDw8xvEfbyObdz39hbzX6CMOp22zDxZMANQCgJCgAHAKjum20xl8zav7r6vL3rggYwiCBsHXLvPbrfMnvHDRPfQIb376O+0ga4gMI2CpgKADEhkNHot0gdzU7Sqah9urwYKCN0RhcZGxjEwgI9+/HFQgjHbTFXVQOYPRcAImViWa3pGjqvs2aLs8ns/H/7s9affnP0YmBoap3rfjcRTDwQHICPDAl8lPFW3SQOAdOPrc3PBdKfqnbq3iwdm2l9aNXD5xZUDse+UPZslSinZJYLbqiS6+49AIDAJ3UyGFp+eDLUPKjL/Veh4dI7G62RW444iIXPu/YLZVX08FMq0Hdy6cP6ZS+FZtf4PbWZnkGrBNhAHWhFCpznY6w0npMGM/eQGeHGvT6xvQeHRYKB9amrJ97I80wpEXU9IFIBhYPwHwTDQZJH5AZqZ0FGPtLs3Nefp2ff4Jpm1jppcZtEMIMpecLG4kpY1NwKyc7Yi5SEsehfrsfRfND3R0yrIfb949IU555vrmFDfggwnGqt8BgbGJ1TEBBZPTJpEUZQJJZRqROPRZDfrqo2JUIP0gjf+vnzMXfCqrjg9IgEQxifo5NVYtzU2/Ik1rTikZLnISHDgv2NKdK4ZWUo95gyzWZYe0lTHkl83HHmifjt6q7mZCfX1SSc4BtI7NZJAFGMTFRO6KigWLGAmWW9VVJsBnr61bUPYW9akMxnQRJTRcHA3/eLca8O/qv0EADSe6LPJVngcAIRl97eUwxTtsYmQaY3blOJOsZS82fT4J976erSlkds8nDSfUBMui6AIoFFZZJRcIoOj75BQ4Jjx1g4I/DVayqb3HiS532xiugwwFhzVhi+uHX+2Yt9tZWhhrkovmEwAQwdHAN6K/nlf3QkAeGTZ4pY/F2QU7UI0NdUkTmvauOavQ8/6a/a83sAkaAegWD0yNBFQwpORL+6sVk4yPh9zP745W5z3gy5k8zrotbGQfrqnanzLvacMnYq9pZbyWT9KTbMtcjmFTM4VkTAZio5OtI32D7xC3lv0Ke/PhXO33j07p+avOa6pHqqPRy6Mv1/+0t6GCz6fD3GyugGJjMJjgMEHDIoBQT0i7pc6d8nTS1fBWALip47WT2yqbeHKeNmJdTMq818o+4bT5FAAqEopUflhAV8LAZw/HdED54eeDu2c0cQr6YH52+8ry67dn2HNggn99P8+/T/ldbwoe4qAFfcCqm8Bio3CQ7xAfMDBlR/8bjqyZfwHU4FpQ5f3c3AeJlx3fF3h0opX5tY6lcjYpNbersG+/Sr+y3sa/uBvIcjCMf2b5WZhamX+5pSGk0/xM60fNhwYCl54W9UoyMTzwGOLt5YkO8IHyV9ksFdSqn3GPSqY9yB2TVHYeAQS/SebOAGxBXsKvXMKtkwvA727M0YP7k9I5z46eyjY1/HUyGfHN9yXOdT30hIZN1URMj+fEstd0zY51raWc0IKjJ3fHJkc1W1ihpg9Zc5yAwqSWFzEWw6AkRfF5lkk8PCGg59HD/zkOLxax9D63ic95W7p8hVVPflRXGbhC+tw65xtwvVh8Ns/9tcoijBTAQFlWxLEmmdHFM18BiG0HKrgZOlkT0+6JbtM1N3V/BurIYllpPVmLSDMH5qxbMrHCICo0c9gYCAOaYut1iz7vzAFWH+fKLPxwAHUPGcbbWRi7YtnFdbIxPePn//96PDVS+9+9MXkzvfDglMGprg9tZm1z3igHXRNi3UwnfefKa/IW2RFfj5HknSNr7N38qprkJlsNXFlnAiNGK/KK9Mll5JGCEAiRAHUYCvjgyfQgQ4+WZAAP9IfvH9R65TU9MKl//XJuoERBemMUmZRUhI5OdMM64he0TUAqgvOtCnf8BgNB77bHbguCSeNXNDpeB9A5JJqUKIys4SYUhSqEgqU6gB6lFMmQF/4xiiGusZuGRCeFNKmDskmEUISA2JBCHlcRqjPX2Vq5xWAswGKg0HJADYGOtx04Dod7PsDpdGYThI8SRan4VNP2xgiiQkmYRAcMoBj6gLgIayuxlDXLPCrJViMEKNAaHyp4FYAWRAGbTLCTh0LcNtEF71xHSCho/G43jWaBPOx2yPAwJjnV6OgJy7yB0RylhhF+sH2ifjE1b9jM4Arl+jI4lop/Ps7i8GPVGipJ8b1Mkrg+/bUQsr0R6w5CR1bMCA1cnz0g1cDvIuwaJqNEIDG4lf6Ro9FmJF/YwuDW12QdIayePgIS7AFSHEXS8v+WKqVPHQKjRzcApHC+6U0iTpK7XLo1OwDaMXJbXjizEESTxBwFi4iltQnPXM8JmsuVicjTFQDA1v4d91duHkGMlkrCKKQgElO96y6CkRenF92wMgXu9bbQq05PxOs6RKz568HP1o1CnAY7eh62Vpc8uOUUrOm2AUpNJC2Xg/lrhcJAcHhAHuuxuz5SMUOQdbPXHhjaH3tu9xcunRsndmUYY5pIyycuLCHY6S2t9ysH2xsOnz09rYgYAzD/tWdLHztPa6BXTNWiMv23ssVRx4ufSpxpncXKIJku8uMMhZgkr7Qpmd+y6VnLsS6s8SCqCLKkbMX/zDjobV8OrLS6W9UmMx5DRhEiGkjRw6fq/uYr25FUMcaq5ho7AbGRlyDdCOXfAkCBGyk56csFFBBsgpC6tffNNVsyuXjd2h18Zrop4dXJoaunKDxKMhOUZScgsjiUVEdGuyc7Dy+JrA8b1U7tOsVBS9MSU9Z+LYkuJS4PsKCsb6fctu9vS3ID4j625Fu7Aa2RzcVscKap2Bo4G/R3yzbDa8zCR5FGl7RtkHInNeECQUxPn7WMnqyfrh5SXIiAiDvhtfuFotmpQJCSOvuHRnZuraLO8lfVpTsvstuvudth+ItM1EThMOfPvduV+XGhgombe9A2tqS1u95rVPvHYwdbRKJZL9LKa9Yq52QXACwGwp4R7SJ1F+zhT3clSa5C59m5pQCNf3rR1LWnv6tOPzhjmv7f3h1eMt/3nDmpuTP3+FNhbkrTcj9nAm5UkRmgrFo585DXZUbq6raRIh0GHrp1sKl01IKVlwNdO0TCaMqmgBdoCx005K/Roc6JrAd6Bm6uiPCbLl+ongczOb4FRNcj3vXXGjHieAxbOv4vdw3SN14yRoZe+8RmVRtRt5smckAagjCsXMbD50qf47n3e9HpLqK8fHBsx6Z1EAnBFQMhGBGmEgJ5R1xa0Hh47KOCfquiufVwGe1JBo4SvUYgDk9izrzVoD1a6/QrkEbXLwIkpj5stU2/fsmZWo2z4KmDn8UiXR+61DHrBvg17k+mT5GMWKUiQxRUQTRoiHKeUHQAGEGwz34+qIC0AIUGplI/OhwDGC+svLEtxl2f1dC5nkCi7sRRKCycpd2KdR/LhYeZEyL/b9Ig61Hj1byFoSqKib6/UCS2Ahx2wiQToEgxCGoQEBeubHAviNMnduudsJXCnfwju0N25Y0e40Vjud+1g4vX0rv0L8tmF8S7Jt/5czGe8b1785oMoYVsm06t9/5DmO253t2ulfvzIH8fAd4PHavF2weD9i9ADbDYh0T+H+Fr7LMv7iO6yRZlZ+x8bMej8de5K2yLS977Wsbyk++9cYixp6Z07eXnxGBMYg8vONHdrMzX5lZtIbZ01emFn9nHFOGEaEgEQEwiVPU9afaay2oE4qMLSqZout8npztCKrbfdQPfrpg2s9LS9O+f9gqORhQDRl/DYmoi0hMSTdPES6NDfb2jx99gs+E5DDa+cgA69izINH/+Ys6JYNEYFaCmJlgbCIYmzVdc6g0fntM2S3wZF0lnxlMBqDIooAFBSgzISbIwLBEKbEyQr+4HO7f3BX9vwV/Or/2Mlf9B0HwrdPo5WJuAAAAAElFTkSuQmCC" sizes="any">
@@ -603,13 +616,197 @@
     text-decoration: none;
     font-weight: 600;
   }
-  html.light footer a:hover {
-    text-decoration: underline;
+  /* Accessibility Focus Rings */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  /* Skeleton Loading State */
+  .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 37%, rgba(255,255,255,0.06) 63%);
+    background-size: 400% 100%;
+    animation: skeleton-pulse 1.4s ease infinite;
+    border-radius: 4px;
+  }
+  html.light .skeleton {
+    background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 37%, #E2E8F0 63%);
+    background-size: 400% 100%;
+  }
+  @keyframes skeleton-pulse {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+
+  /* Mobile Navigation Drawer UI */
+  .mobile-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--nav-btn-bg);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .mobile-menu-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary-light);
+  }
+
+  .mobile-drawer {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(85vw, 320px);
+    height: 100vh;
+    background: var(--bg-surface);
+    border-left: 1px solid var(--border-subtle);
+    z-index: 200;
+    transform: translateX(100%);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px;
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+  }
+  html.light .mobile-drawer {
+    background: #FFFFFF;
+    border-left-color: #D8E0EB;
+    box-shadow: -8px 0 30px rgba(15, 23, 42, 0.15);
+  }
+  .mobile-drawer.open {
+    transform: translateX(0);
+  }
+  .mobile-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .mobile-drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mobile-drawer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    min-height: 44px;
+  }
+  html.light .mobile-drawer-nav a {
+    color: #374151;
+  }
+  .mobile-drawer-nav a.active, .mobile-drawer-nav a:hover {
+    background: var(--primary);
+    color: #FFFFFF;
+  }
+
+  .mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+  .mobile-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Inference Results Responsive Layout */
+  .infer-results-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+  }
+  .infer-media-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: #000;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+  }
+  .infer-img-box {
+    position: relative;
+    min-height: 240px;
+    background: #070A12;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Ultra-Wide Constraints (2560px+) */
+  @media (min-width: 1920px) {
+    .app-container {
+      max-width: 1720px;
+    }
+  }
+
+  /* Responsive Layout Breakpoints */
+  @media (max-width: 1280px) {
+    .grid-3col { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 1024px) {
-    .grid-3col, .grid-2col, .grid-equal, .grid-6col, .upload-grid { grid-template-columns: 1fr; }
-    nav { display: none; }
+    .mobile-menu-btn { display: flex; }
+    nav.desktop-nav { display: none; }
+    .grid-3col, .grid-2col, .grid-equal, .upload-grid { grid-template-columns: 1fr; }
+    .grid-6col { grid-template-columns: repeat(3, 1fr); }
+    .app-container { margin-top: 72px; padding: 0 16px; }
+  }
+
+  @media (max-width: 768px) {
+    .infer-results-grid { grid-template-columns: 1fr !important; }
+    .infer-media-grid { grid-template-columns: 1fr !important; }
+    .infer-img-box { min-height: 200px; height: auto; }
+    .viewer-screen { height: auto; flex-direction: column; min-height: 240px; }
+    .viewer-panel { width: 100% !important; min-height: 220px; }
+    .viewer-panel:first-child { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 0 12px; height: 56px; gap: 8px; }
+    .logo-group { gap: 8px; }
+    .logo-title { font-size: 15px; }
+    .logo-sub { display: none; }
+    .logo-img { height: 32px; }
+    .status-badge { padding: 4px 8px; }
+    .status-badge #status-text { display: none; }
+    .theme-toggle-wrapper { margin-left: 4px; }
+    .theme-toggle-btn { width: 50px; height: 28px; }
+    html.light .theme-toggle-thumb { transform: translateX(20px); }
+    .theme-toggle-thumb { width: 20px; height: 20px; }
+    .mobile-menu-btn { width: 38px; height: 38px; }
+    .kpi-grid { grid-template-columns: 1fr; }
+    .grid-6col { grid-template-columns: repeat(2, 1fr); }
+    
+    .viewer-toolbar { padding: 10px 12px; flex-direction: column; align-items: stretch; gap: 10px; }
+    .btn-group { width: 100%; justify-content: space-between; }
+    .btn-tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 10px; min-height: 38px; }
+    .viewer-controls { padding: 10px 12px; gap: 10px; justify-content: center; }
+    .drop-zone { padding: 16px 12px; }
   }
 </style>
 </head>
@@ -625,7 +822,7 @@
     </div>
   </div>
 
-  <nav>
+  <nav class="desktop-nav" aria-label="Main Navigation">
     <a href="#overview" class="active">Overview</a>
     <a href="#modality-viewer">Viewer</a>
     <a href="#dataset">Dataset</a>
@@ -636,7 +833,7 @@
   </nav>
 
   <div class="header-right">
-    <div class="status-badge" id="sys-status">
+    <div class="status-badge" id="sys-status" role="status" aria-live="polite">
       <span class="status-dot" id="status-dot"></span>
       <span id="status-text">Backend Active</span>
     </div>
@@ -651,8 +848,33 @@
         <span class="material-symbols-outlined theme-icon-bg">light_mode</span>
       </button>
     </div>
+
+    <!-- Mobile Hamburger Toggle Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation Drawer" aria-expanded="false" aria-controls="mobile-drawer">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
   </div>
 </header>
+
+<!-- Mobile Drawer Navigation -->
+<div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation" role="dialog" aria-hidden="true">
+  <div class="mobile-drawer-header">
+    <span style="font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.05em;">ARGUS MENU</span>
+    <button class="mobile-menu-btn" id="mobile-drawer-close" aria-label="Close Navigation Drawer" style="display: flex;">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <nav class="mobile-drawer-nav" aria-label="Mobile Navigation Links">
+    <a href="#overview" class="active"><span class="material-symbols-outlined">dashboard</span>Overview</a>
+    <a href="#modality-viewer"><span class="material-symbols-outlined">visibility</span>Viewer</a>
+    <a href="#dataset"><span class="material-symbols-outlined">dataset</span>Dataset</a>
+    <a href="#benchmark"><span class="material-symbols-outlined">analytics</span>Benchmark</a>
+    <a href="#live-detection"><span class="material-symbols-outlined">psychology</span>Live Inference</a>
+    <a href="#error-analysis"><span class="material-symbols-outlined">bug_report</span>Error Analysis</a>
+    <a href="#architecture"><span class="material-symbols-outlined">account_tree</span>Architecture</a>
+  </nav>
+</div>
+<div class="mobile-backdrop" id="mobile-backdrop" aria-hidden="true"></div>
 
 <div class="app-container">
 
@@ -997,13 +1219,13 @@
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+          <div class="infer-results-grid">
             <!-- Output Media Area -->
-            <div id="res-img-wrap-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #000; padding: 8px; border-radius: 8px; border: 1px solid var(--border-subtle);">
-              <div style="position: relative; min-height: 240px; background: #070A12; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;" id="res-img-wrap-rgb">
+            <div id="res-img-wrap-container" class="infer-media-grid">
+              <div class="infer-img-box" id="res-img-wrap-rgb">
                 <div style="position: absolute; top: 6px; left: 6px; z-index: 5; background: rgba(0,0,0,0.75); color: #fff; font-family: var(--font-mono); font-size: 9px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);">VISUAL (RGB)</div>
               </div>
-              <div style="position: relative; min-height: 240px; background: #070A12; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;" id="res-img-wrap-thermal">
+              <div class="infer-img-box" id="res-img-wrap-thermal">
                 <div style="position: absolute; top: 6px; left: 6px; z-index: 5; background: rgba(0,0,0,0.75); color: var(--thermal); font-family: var(--font-mono); font-size: 9px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(245,158,11,0.3);">INFRARED (LWIR)</div>
               </div>
             </div>
@@ -1269,9 +1491,14 @@
         pthermal.style.width = '100%';
       } else {
         prgb.style.display = 'block';
-        prgb.style.width = '50%';
         pthermal.style.display = 'block';
-        pthermal.style.width = '50%';
+        if (window.innerWidth <= 768) {
+          prgb.style.width = '100%';
+          pthermal.style.width = '100%';
+        } else {
+          prgb.style.width = '50%';
+          pthermal.style.width = '50%';
+        }
       }
     }
     renderFrame(curFrame);
@@ -1958,6 +2185,70 @@
     });
     chartInstances.push(chMissed);
   }
+
+  // ==========================================
+  // MOBILE NAVIGATION & ACCESSIBILITY HANDLERS
+  // ==========================================
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const closeBtn = document.getElementById('mobile-drawer-close');
+    const drawer = document.getElementById('mobile-drawer');
+    const backdrop = document.getElementById('mobile-backdrop');
+    const drawerLinks = drawer ? drawer.querySelectorAll('a') : [];
+
+    function openMobileDrawer() {
+      if (!drawer || !backdrop) return;
+      drawer.classList.add('open');
+      backdrop.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileDrawer() {
+      if (!drawer || !backdrop) return;
+      drawer.classList.remove('open');
+      backdrop.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    if (menuBtn) menuBtn.addEventListener('click', openMobileDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeMobileDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeMobileDrawer);
+
+    drawerLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeMobileDrawer();
+        drawerLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    // Close on Escape Key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) {
+        closeMobileDrawer();
+      }
+    });
+
+    // Debounced Chart & Viewport Resize Handler
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (typeof setModality === 'function' && typeof curModality !== 'undefined') {
+          setModality(curModality);
+        }
+        chartInstances.forEach(chart => {
+          if (chart && typeof chart.resize === 'function') {
+            chart.resize();
+          }
+        });
+      }, 200);
+    });
+  });
 </script>
 </body>
 </html>
