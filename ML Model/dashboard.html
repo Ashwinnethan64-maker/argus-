@@ -1366,7 +1366,10 @@
 </footer>
 
 <script>
-  const API = 'http://localhost:5000/api';
+  let API = window.location.protocol === 'file:' 
+    ? 'http://localhost:5000/api' 
+    : `${window.location.origin}/api`;
+
   const BM_KEYS = ['bbox_mAP','bbox_mAP_50','bbox_mAP_75','bbox_mAP_s','bbox_mAP_m','bbox_mAP_l'];
   const BM_LABELS = ['mAP','mAP₅₀','mAP₇₅','mAP_S','mAP_M','mAP_L'];
   
@@ -1392,7 +1395,7 @@
   };
 
   document.addEventListener('DOMContentLoaded', async () => {
-    checkHealth();
+    await checkHealth();
     loadImgList();
     initCharts();
     renderDeltaCards();
@@ -1447,17 +1450,39 @@
   }
 
   async function checkHealth() {
-    try {
-      const res = await fetch(`${API}/health`);
-      const data = await res.json();
-      if (data.status === 'ok') {
-        document.getElementById('status-text').textContent = 'Backend Active';
-        document.getElementById('status-dot').style.background = 'var(--emerald)';
+    const candidates = [
+      API,
+      window.location.protocol !== 'file:' ? `${window.location.origin}/api` : null,
+      'http://localhost:5000/api',
+      'http://127.0.0.1:5000/api'
+    ];
+
+    const uniqueCandidates = [...new Set(candidates.filter(Boolean))];
+
+    for (const endpoint of uniqueCandidates) {
+      try {
+        const res = await fetch(`${endpoint}/health`, { cache: 'no-cache' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === 'ok') {
+            API = endpoint;
+            const textEl = document.getElementById('status-text');
+            const dotEl = document.getElementById('status-dot');
+            if (textEl) textEl.textContent = 'Backend Active';
+            if (dotEl) dotEl.style.background = 'var(--emerald)';
+            return true;
+          }
+        }
+      } catch (e) {
+        // Try next candidate
       }
-    } catch {
-      document.getElementById('status-text').textContent = 'Offline Preview';
-      document.getElementById('status-dot').style.background = 'var(--rose)';
     }
+
+    const textEl = document.getElementById('status-text');
+    const dotEl = document.getElementById('status-dot');
+    if (textEl) textEl.textContent = 'Offline Preview';
+    if (dotEl) dotEl.style.background = 'var(--rose)';
+    return false;
   }
 
   async function loadImgList() {
