@@ -41,6 +41,15 @@ REPO_DIR = os.path.join(BASE_DIR, "baseline_qfdet_repo", "mmdet-rgbtdroneperson-
 if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 
+# Mock matplotlib modules to prevent AppLocker/Windows DLL block on _image.pyd
+import unittest.mock as _mock
+sys.modules['matplotlib'] = _mock.MagicMock()
+sys.modules['matplotlib.pyplot'] = _mock.MagicMock()
+sys.modules['matplotlib.collections'] = _mock.MagicMock()
+sys.modules['matplotlib.patches'] = _mock.MagicMock()
+sys.modules['matplotlib.lines'] = _mock.MagicMock()
+sys.modules['matplotlib.image'] = _mock.MagicMock()
+
 # Windows DLL path for torch
 if hasattr(os, "add_dll_directory"):
     torch_lib = r"C:\env\Lib\site-packages\torch\lib"
@@ -722,6 +731,11 @@ def _run_inference(rgb_path: str, ir_path: str, modality: str, threshold: float)
         if ir_img is None:
             ir_img = rgb_img.copy()
 
+        if len(rgb_img.shape) == 2:
+            rgb_img = cv2.cvtColor(rgb_img, cv2.COLOR_GRAY2BGR)
+        if len(ir_img.shape) == 2:
+            ir_img = cv2.cvtColor(ir_img, cv2.COLOR_GRAY2BGR)
+
         orig_h, orig_w = rgb_img.shape[:2]
 
         # Resize to model input (640×512 keeping aspect ratio)
@@ -786,23 +800,47 @@ def _run_inference(rgb_path: str, ir_path: str, modality: str, threshold: float)
     elapsed_ms = (time.time() - start) * 1000
 
     # raw_results: list of per-class bbox arrays [x1,y1,x2,y2,score]
-    # QFDet uses class 0 = pedestrian
+    CLASS_NAMES = ["person", "vehicle", "drone"]
     detections = []
+    annotated_b64 = None
+
     try:
         if raw_results and len(raw_results[0]) > 0:
-            person_bboxes = raw_results[0][0]  # class 0 = person
-            for bbox in person_bboxes:
-                x1, y1, x2, y2, score = float(bbox[0]), float(bbox[1]), float(bbox[2]), float(bbox[3]), float(bbox[4])
-                if score < threshold:
-                    continue
-                w = x2 - x1
-                h = y2 - y1
-                detections.append({
-                    "bbox":  [round(x1, 2), round(y1, 2), round(w, 2), round(h, 2)],
-                    "bbox_xyxy": [round(x1, 2), round(y1, 2), round(x2, 2), round(y2, 2)],
-                    "score": round(score, 4),
-                    "scale": _classify_scale(w, h),
-                })
+            per_img_results = raw_results[0]
+            for class_idx, class_bboxes in enumerate(per_img_results):
+                class_name = CLASS_NAMES[class_idx] if class_idx < len(CLASS_NAMES) else f"class_{class_idx}"
+                for bbox in class_bboxes:
+                    x1, y1, x2, y2, score = float(bbox[0]), float(bbox[1]), float(bbox[2]), float(bbox[3]), float(bbox[4])
+                    if score < threshold:
+                        continue
+                    w = x2 - x1
+                    h = y2 - y1
+                    detections.append({
+                        "bbox":        [round(x1, 2), round(y1, 2), round(w, 2), round(h, 2)],
+                        "bbox_xyxy":   [round(x1, 2), round(y1, 2), round(x2, 2), round(x2, 2)],
+                        "x1":          round(x1, 2),
+                        "y1":          round(y1, 2),
+                        "x2":          round(x2, 2),
+                        "y2":          round(y2, 2),
+                        "score":       round(score, 4),
+                        "class":       class_name,
+                        "class_id":    class_idx,
+                        "scale":       _classify_scale(w, h),
+                    })
+
+        # Draw OpenCV annotated image with bounding boxes
+        vis_img = rgb_img.copy()
+        for det in detections:
+            x1, y1, x2, y2 = int(det["x1"]), int(det["y1"]), int(det["x2"]), int(det["y2"])
+            sc = det["score"]
+            cls_txt = f"{det['class']} {sc:.2f}"
+            cv2.rectangle(vis_img, (x1, y1), (x2, y2), (0, 255, 127), 2)
+            cv2.putText(vis_img, cls_txt, (x1, max(y1 - 6, 15)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 127), 2)
+
+        _, buffer = cv2.imencode('.jpg', vis_img)
+        annotated_b64 = "data:image/jpeg;base64," + base64.b64encode(buffer).decode('utf-8')
+
     except Exception as e:
         log.warning(f"Result parsing error: {e}")
 
@@ -822,15 +860,24 @@ def _run_inference(rgb_path: str, ir_path: str, modality: str, threshold: float)
     }
 
     return {
+        "success":          True,
         "model":            "CMAGM QFDet (Stage 3)",
         "modality":         modality,
         "threshold":        threshold,
-        "detections":       detections,
+        "detections":       len(detections),
         "count":            len(detections),
+        "boxes":            detections,
+        "annotated_image":  annotated_b64,
+        "latency":          round(elapsed_ms, 2),
         "inference_time_ms": round(elapsed_ms, 2),
         "fps":              round(1000 / elapsed_ms, 3) if elapsed_ms > 0 else 0,
         "image_size":       {"width": orig_w, "height": orig_h},
         "model_loaded":     True,
+        "statistics": {
+            "fps":          round(1000 / elapsed_ms, 3) if elapsed_ms > 0 else 0,
+            "latency":      round(elapsed_ms, 2),
+            "objects":      len(detections),
+        },
         "stats":            stats,
     }
 

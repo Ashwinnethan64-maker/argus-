@@ -121,6 +121,10 @@
 
   .app-container { max-width: 1440px; margin: 84px auto 40px; padding: 0 24px; }
 
+  html { scroll-behavior: smooth; }
+
+  section[id], .section-title { scroll-margin-top: 80px; }
+
   /* Section Titles */
   .section-title {
     font-family: var(--font-head); font-size: 14px; font-weight: 700; text-transform: uppercase;
@@ -410,7 +414,7 @@
             <tr><td>Test</td><td style="text-align: right; color: var(--primary-light);">200</td><td style="text-align: right;">2,068</td><td style="text-align: right; color: var(--text-muted);">10.34</td></tr>
           </tbody>
         </table>
-        <div style="margin-top: 16px; display: flex; flex-wrap: gap: 6px; gap: 6px;">
+        <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px;">
           <span class="tag tag-rose">Occlusion</span>
           <span class="tag tag-amber">Low Light</span>
           <span class="tag tag-blue">Clutter</span>
@@ -761,7 +765,54 @@
     initCharts();
     renderDeltaCards();
     renderBMSelectedCards(S_BASE.both_val.metrics, 'Baseline RGB+Thermal');
+    initNav();
+    setupDragAndDrop();
   });
+
+  function initNav() {
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        navLinks.forEach(a => a.classList.remove('active'));
+        this.classList.add('active');
+        const targetId = this.getAttribute('href');
+        const targetEl = document.querySelector(targetId);
+        if (targetEl) {
+          const headerOffset = 80;
+          const elementPosition = targetEl.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }
+      });
+    });
+
+    const sections = document.querySelectorAll('section[id], div[id].section-title');
+    const observerOptions = {
+      root: null,
+      rootMargin: '-80px 0px -60% 0px',
+      threshold: 0
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(a => {
+            if (a.getAttribute('href') === `#${id}`) {
+              a.classList.add('active');
+            } else {
+              a.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(sec => observer.observe(sec));
+  }
 
   async function checkHealth() {
     try {
@@ -794,6 +845,25 @@
     curModality = mod;
     document.querySelectorAll('#modality-viewer .btn-tab').forEach(b => b.classList.remove('active'));
     document.getElementById(`btn-${mod}`)?.classList.add('active');
+
+    const prgb = document.getElementById('panel-rgb');
+    const pthermal = document.getElementById('panel-thermal');
+    if (prgb && pthermal) {
+      if (mod === 'rgb') {
+        prgb.style.display = 'block';
+        prgb.style.width = '100%';
+        pthermal.style.display = 'none';
+      } else if (mod === 'thermal') {
+        prgb.style.display = 'none';
+        pthermal.style.display = 'block';
+        pthermal.style.width = '100%';
+      } else {
+        prgb.style.display = 'block';
+        prgb.style.width = '50%';
+        pthermal.style.display = 'block';
+        pthermal.style.width = '50%';
+      }
+    }
     renderFrame(curFrame);
   }
 
@@ -890,70 +960,168 @@
 
   function handleFileSelect(e, type) {
     const file = e.target.files[0];
-    if (!file) return;
-    if (type === 'rgb') {
-      selectedRGBFile = file;
-      document.getElementById('label-rgb').textContent = file.name;
-    } else {
-      selectedThermalFile = file;
-      document.getElementById('label-thermal').textContent = file.name;
-    }
+    if (file) setUploadedFile(file, type);
+  }
+
+  function setUploadedFile(file, type) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (type === 'rgb') {
+        selectedRGBFile = file;
+        document.getElementById('label-rgb').textContent = file.name;
+        const dz = document.getElementById('dz-rgb');
+        dz.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${e.target.result})`;
+        dz.style.backgroundSize = 'cover';
+        dz.style.backgroundPosition = 'center';
+      } else {
+        selectedThermalFile = file;
+        document.getElementById('label-thermal').textContent = file.name;
+        const dz = document.getElementById('dz-thermal');
+        dz.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${e.target.result})`;
+        dz.style.backgroundSize = 'cover';
+        dz.style.backgroundPosition = 'center';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function setupDragAndDrop() {
+    ['dz-rgb', 'dz-thermal'].forEach(id => {
+      const dz = document.getElementById(id);
+      if (!dz) return;
+      const type = id === 'dz-rgb' ? 'rgb' : 'thermal';
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dz.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dz.style.borderColor = 'var(--primary)';
+          dz.style.background = 'rgba(99, 102, 241, 0.15)';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dz.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dz.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          dz.style.background = 'rgba(0, 0, 0, 0.25)';
+        }, false);
+      });
+
+      dz.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+          setUploadedFile(files[0], type);
+        }
+      }, false);
+    });
   }
 
   async function runInference() {
-    if (!selectedRGBFile && !selectedThermalFile) {
-      alert("Please upload an image first.");
-      return;
-    }
+    const btn = document.querySelector('.action-btn');
+    if (btn) btn.innerText = "⏳ RUNNING INFERENCE...";
 
     const fd = new FormData();
-    if (selectedRGBFile) fd.append('rgb_image', selectedRGBFile);
-    if (selectedThermalFile) fd.append('thermal_image', selectedThermalFile);
-    fd.append('modality', 'both');
-    fd.append('threshold', 0.3);
+    let fileToDraw = null;
+
+    if (selectedRGBFile || selectedThermalFile) {
+      if (selectedRGBFile) fd.append('rgb_image', selectedRGBFile);
+      if (selectedThermalFile) fd.append('thermal_image', selectedThermalFile);
+      fileToDraw = selectedRGBFile || selectedThermalFile;
+    } else {
+      // Auto-use current dataset image if no upload!
+      const currentItem = imgList[simFrame] || imgList[0];
+      if (!currentItem) {
+        alert("No image available to run inference on.");
+        if (btn) btn.innerText = "⚡ RUN CMAGM DETECTION";
+        return;
+      }
+      try {
+        const imageUrl = `${API}/image?split=test&modality=rgb&filename=${currentItem.filename}`;
+        const blobRes = await fetch(imageUrl);
+        const blob = await blobRes.blob();
+        const file = new File([blob], currentItem.filename, { type: blob.type || 'image/jpeg' });
+        fd.append('rgb_image', file);
+        fileToDraw = file;
+
+        // Fetch corresponding thermal image from dataset as well
+        const thermalUrl = `${API}/image?split=test&modality=thermal&filename=${currentItem.filename}`;
+        const tBlobRes = await fetch(thermalUrl);
+        if (tBlobRes.ok) {
+          const tBlob = await tBlobRes.blob();
+          const tFile = new File([tBlob], `thermal_${currentItem.filename}`, { type: tBlob.type || 'image/jpeg' });
+          fd.append('thermal_image', tFile);
+        }
+      } catch (err) {
+        console.error("Failed to fetch current image for inference:", err);
+      }
+    }
+
+    fd.append('modality', selectedRGBFile && !selectedThermalFile ? 'rgb' : selectedThermalFile && !selectedRGBFile ? 'thermal' : 'both');
+    fd.append('threshold', 0.25);
 
     try {
       const res = await fetch(`${API}/infer`, { method: 'POST', body: fd });
       const data = await res.json();
-      showInferResult(data);
-    } catch (e) {}
+      showInferResult(data, fileToDraw);
+    } catch (e) {
+      console.error("Inference error:", e);
+      alert("Inference failed: " + e.message);
+    } finally {
+      if (btn) btn.innerText = "⚡ RUN CMAGM DETECTION";
+    }
   }
 
-  function showInferResult(data) {
+  function showInferResult(data, overrideFile) {
     document.getElementById('infer-results').style.display = 'block';
-    document.getElementById('res-time').textContent = `${data.inference_time_ms?.toFixed(0) || '--'} ms`;
-    document.getElementById('res-cnt').textContent = data.count || 0;
+    const latency = data.latency || data.inference_time_ms || 0;
+    const count = (typeof data.detections === 'number') ? data.detections : (data.count || 0);
+    const boxList = data.boxes || data.detections || [];
+
+    document.getElementById('res-time').textContent = `${Math.round(latency)} ms`;
+    document.getElementById('res-cnt').textContent = count;
 
     const inner = document.getElementById('res-img-wrap');
-    const file = selectedRGBFile || selectedThermalFile;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      inner.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain;">`;
-      const img = inner.querySelector('img');
-      img.onload = () => {
-        const scaleX = inner.offsetWidth / (data.image_size?.width || 1920);
-        const scaleY = inner.offsetHeight / (data.image_size?.height || 1080);
+    if (data.annotated_image) {
+      inner.innerHTML = `<img src="${data.annotated_image}" style="width:100%;height:100%;object-fit:contain;">`;
+    } else {
+      const file = overrideFile || selectedRGBFile || selectedThermalFile;
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        inner.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain;">`;
+        const img = inner.querySelector('img');
+        img.onload = () => {
+          const scaleX = inner.offsetWidth / (data.image_size?.width || 1920);
+          const scaleY = inner.offsetHeight / (data.image_size?.height || 1080);
 
-        (data.detections || []).forEach(d => {
-          const [x,y,w,h] = d.bbox;
-          const el = document.createElement('div');
-          el.className = 'bbox-cmagm';
-          el.setAttribute('data-label', `${d.score.toFixed(2)} ${d.scale[0].toUpperCase()}`);
-          el.style.cssText = `left:${x*scaleX}px;top:${y*scaleY}px;width:${w*scaleX}px;height:${h*scaleY}px;`;
-          inner.appendChild(el);
-        });
+          (Array.isArray(boxList) ? boxList : []).forEach(d => {
+            const bbox = d.bbox || [d.x1, d.y1, d.x2 - d.x1, d.y2 - d.y1];
+            const [x,y,w,h] = bbox;
+            const el = document.createElement('div');
+            el.className = 'bbox-cmagm';
+            const scaleTag = d.scale ? d.scale[0].toUpperCase() : 'P';
+            el.setAttribute('data-label', `${d.class || 'person'} ${d.score.toFixed(2)} [${scaleTag}]`);
+            el.style.cssText = `left:${x*scaleX}px;top:${y*scaleY}px;width:${w*scaleX}px;height:${h*scaleY}px;`;
+            inner.appendChild(el);
+          });
+        };
       };
-    };
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    }
 
     const list = document.getElementById('res-list');
-    list.innerHTML = (data.detections || []).map((d, i) => `
-      <div class="det-item">
-        <span>#${i+1}</span>
-        <span class="tag ${d.scale==='small'?'tag-rose':d.scale==='medium'?'tag-amber':'tag-emerald'}">${d.scale.toUpperCase()}</span>
-        <span style="color: var(--primary-light);">${d.score.toFixed(3)}</span>
-      </div>
-    `).join('');
+    if (list) {
+      list.innerHTML = (Array.isArray(boxList) ? boxList : []).map((d, i) => `
+        <div class="det-item">
+          <span>#${i+1}</span>
+          <span class="tag ${d.scale==='small'?'tag-rose':d.scale==='medium'?'tag-amber':'tag-emerald'}">${(d.class || 'PERSON').toUpperCase()}</span>
+          <span style="color: var(--primary-light);">${d.score.toFixed(3)}</span>
+        </div>
+      `).join('');
+    }
   }
 
   let simFrame = 0;
