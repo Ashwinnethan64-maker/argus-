@@ -1,6 +1,9 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": null,
   "routes": [
     {
       "src": "^/api/image\\?split=test&modality=rgb&filename=(.*)$",
