@@ -3,63 +3,90 @@
   "cleanUrls": true,
   "framework": null,
   "buildCommand": null,
-  "outputDirectory": null,
-  "routes": [
+  "outputDirectory": "public",
+  "rewrites": [
     {
-      "src": "^/api/image\\?split=test&modality=rgb&filename=(.*)$",
-      "dest": "/dataset/rgb/$1"
+      "source": "/api/image",
+      "has": [
+        {
+          "type": "query",
+          "key": "modality",
+          "value": "rgb"
+        },
+        {
+          "type": "query",
+          "key": "filename",
+          "value": "(?<file>.*)"
+        }
+      ],
+      "destination": "/dataset/rgb/:file"
     },
     {
-      "src": "^/api/image\\?split=test&modality=thermal&filename=(.*)$",
-      "dest": "/dataset/thermal/$1"
+      "source": "/api/image",
+      "has": [
+        {
+          "type": "query",
+          "key": "modality",
+          "value": "thermal"
+        },
+        {
+          "type": "query",
+          "key": "filename",
+          "value": "(?<file>.*)"
+        }
+      ],
+      "destination": "/dataset/thermal/:file"
     },
     {
-      "src": "^/api/predictions\\?image_id=([0-9]+).*$",
-      "dest": "/api/predictions/$1.json"
+      "source": "/api/predictions",
+      "has": [
+        {
+          "type": "query",
+          "key": "image_id",
+          "value": "(?<id>[0-9]+)"
+        }
+      ],
+      "destination": "/api/predictions/:id.json"
     },
     {
-      "src": "^/api/health$",
-      "dest": "/api/health.json"
+      "source": "/api/health",
+      "destination": "/api/health.json"
     },
     {
-      "src": "^/api/summary$",
-      "dest": "/api/summary.json"
+      "source": "/api/summary",
+      "destination": "/api/summary.json"
     },
     {
-      "src": "^/api/image-list.*$",
-      "dest": "/api/image-list.json"
+      "source": "/api/image-list",
+      "destination": "/api/image-list.json"
     },
     {
-      "src": "^/api/dataset-stats$",
-      "dest": "/api/dataset-stats.json"
+      "source": "/api/dataset-stats",
+      "destination": "/api/dataset-stats.json"
     },
     {
-      "src": "^/api/benchmark$",
-      "dest": "/api/benchmark.json"
+      "source": "/api/benchmark",
+      "destination": "/api/benchmark.json"
     },
     {
-      "src": "^/api/cmagm-results$",
-      "dest": "/api/cmagm-results.json"
+      "source": "/api/cmagm-results",
+      "destination": "/api/cmagm-results.json"
     },
     {
-      "src": "^/api/error-analysis$",
-      "dest": "/api/error-analysis.json"
+      "source": "/api/error-analysis",
+      "destination": "/api/error-analysis.json"
     },
     {
-      "src": "^/api/comparison-images$",
-      "dest": "/api/comparison-images.json"
+      "source": "/api/comparison-images",
+      "destination": "/api/comparison-images.json"
     },
     {
-      "src": "^/api/comparison-image/(.*)$",
-      "dest": "/comparison/$1"
+      "source": "/api/comparison-image/:file",
+      "destination": "/comparison/:file"
     },
     {
-      "src": "^/api/infer$",
-      "dest": "/api/infer_sample.json"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/api/infer",
+      "destination": "/api/infer_sample.json"
     }
   ],
   "headers": [
